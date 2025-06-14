@@ -1,0 +1,197 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        // Game data
+        String[] categories = new String[20];
+        int[] points = new int[20];
+        String[] questions = new String[20];
+        String[] answers = new String[20];
+        boolean[] questionAdded = new boolean[20];
+        boolean[] questionAnswered = new boolean[20];
+
+        // Player data
+        String[] playerNames = new String[4];
+        int[] playerScores = new int[4];
+        int playerCount = 0;
+
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n=== JEOPARDY MENU ===");
+            System.out.println("1. Play Game");
+            System.out.println("2. Add Question");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = input.nextInt();
+            input.nextLine();
+
+            if (choice == 1) {
+                // Count questions
+                int totalQuestions = 0;
+                for (int i = 0; i < questionAdded.length; i++) {
+                    if (questionAdded[i]) {
+                        totalQuestions++;
+                    }
+                }
+
+                if (totalQuestions == 0) {
+                    System.out.println("No questions added. Please add questions first.");
+                    continue;
+                }
+
+                // Player setup
+                System.out.print("Enter number of players (2-4): ");
+                playerCount = input.nextInt();
+                input.nextLine();
+                while (playerCount < 2 || playerCount > 4) {
+                    System.out.print("Invalid. Enter number between 2 and 4: ");
+                    playerCount = input.nextInt();
+                    input.nextLine();
+                }
+
+                for (int i = 0; i < playerCount; i++) {
+                    System.out.print("Enter name for Player " + (i + 1) + ": ");
+                    playerNames[i] = input.nextLine();
+                    playerScores[i] = 0;
+                }
+
+                // Reset answered flags
+                for (int i = 0; i < questionAnswered.length; i++) {
+                    questionAnswered[i] = false;
+                }
+
+                int currentPlayer = 0;
+                int questionsLeft = totalQuestions;
+
+                while (questionsLeft > 0) {
+                    // Display scores
+                    System.out.println("\nCurrent Scores:");
+                    for (int i = 0; i < playerCount; i++) {
+                        System.out.println(playerNames[i] + ": " + playerScores[i]);
+                    }
+
+                    // Display board
+                    System.out.println("\nGame Board:");
+                    for (int i = 0; i < categories.length; i++) {
+                        if (questionAdded[i]) {
+                            if (questionAnswered[i]) {
+                                System.out.print("[X]\t");
+                            } else {
+                                System.out.print("[" + categories[i] + "-" + points[i] + "]\t");
+                            }
+                            if ((i + 1) % 5 == 0) {
+                                System.out.println();
+                            }
+                        }
+                    }
+
+                    // Player turn
+                    System.out.println("\n" + playerNames[currentPlayer] + "'s turn.");
+                    System.out.print("Enter category: ");
+                    String selectedCategory = input.nextLine();
+                    System.out.print("Enter point value: ");
+                    int chosenPoint = input.nextInt();
+                    input.nextLine();
+
+                    int index = -1;
+                    for (int i = 0; i < categories.length; i++) {
+                        if (questionAdded[i] && !questionAnswered[i] &&
+                                categories[i].equalsIgnoreCase(selectedCategory) &&
+                                points[i] == chosenPoint) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index == -1) {
+                        System.out.println("Invalid choice or question already answered.");
+                        continue;
+                    }
+
+                    // Ask question
+                    System.out.println("Question: " + questions[index]);
+                    System.out.print("Your answer: ");
+                    String userAnswer = input.nextLine();
+
+                    if (userAnswer.equalsIgnoreCase(answers[index])) {
+                        System.out.println("Correct!");
+                        playerScores[currentPlayer] = points[index];
+                    } else {
+                        System.out.println("Incorrect. Correct answer: " + answers[index]);
+                        playerScores[currentPlayer] = points[index];
+                    }
+
+                    questionAnswered[index] = true;
+                    questionsLeft--;
+                    currentPlayer = (currentPlayer + 1) % playerCount;
+                }
+
+                // Final scores
+                System.out.println("\nGame Over! Final Scores:");
+                int highest = playerScores[0];
+                for (int i = 0; i < playerCount; i++) {
+                    System.out.println(playerNames[i] + ": " + playerScores[i]);
+                    if (playerScores[i] > highest) {
+                        highest = playerScores[i];
+                    }
+                }
+
+                // Winner check
+                int count = 0;
+                for (int i = 0; i < playerCount; i++) {
+                    if (playerScores[i] == highest) {
+                        count++;
+                    }
+                }
+
+                if (count == 1) {
+                    for (int i = 0; i < playerCount; i++) {
+                        if (playerScores[i] == highest) {
+                            System.out.println("Winner: " + playerNames[i]);
+                            break;
+                        }
+                    }
+                } else {
+                    System.out.println("It's a tie!");
+                }
+
+            } else if (choice == 2) {
+                // Add a question
+                int index = -1;
+                for (int i = 0; i < questionAdded.length; i++) {
+                    if (!questionAdded[i]) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index == -1) {
+                    System.out.println("Question list full.");
+                } else {
+                    System.out.print("Enter category: ");
+                    categories[index] = input.nextLine();
+                    System.out.print("Enter point value: ");
+                    points[index] = input.nextInt();
+                    input.nextLine();
+                    System.out.print("Enter question: ");
+                    questions[index] = input.nextLine();
+                    System.out.print("Enter answer: ");
+                    answers[index] = input.nextLine();
+                    questionAdded[index] = true;
+                    System.out.println("Question added!");
+                }
+
+            } else if (choice == 3) {
+                running = false;
+                System.out.println("Goodbye!");
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        }
+
+        input.close();
+    }
+}
