@@ -1,0 +1,29 @@
+Work Log: 
+Day 1: Friday June 6th
+Set up the main Java program with public static void main.
+Created arrays to store categories, points, questions, answers, and player information.
+Initialized variables and Scanner for user input.
+Day 2: Saturday June 7th
+Developed the main menu loop with options: Play Game, Add Question, Exit.
+Implemented adding questions to the arrays.
+Added input validation for menu choices and question entries.
+Day 3: Sunday June 8th -N/A 
+Day 3: Monday June 9th 
+Implemented player setup: choosing number of players and entering player names.
+Created the game board display showing categories and point values.
+Added logic to select questions based on category and point value.
+Day 4: Tuesday June 10th 
+Developed question asking and answer checking. 
+Updated player scores based on answers.
+Added logic to track answered questions and skip them on the board.
+Day 5: Wednesday June 11th
+Implemented turn rotation between players.
+Displayed current scores after each turn.
+Added end-of-game logic: determine and display the winner or tie.
+Day 6: Thursday 12th 
+Tested the game thoroughly, fixed bugs.
+Improved input validation.
+Cleaned up code and added comments for clarity.
+Day 7th: Friday 13th 
+Polished and finalized “Read me” file 
+Completed work log document and submitted. 
